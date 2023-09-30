@@ -6,9 +6,12 @@ export function SummationOfValueAndWeight(array: number[][]): number {
     }
     return result;
 }
-export function SummationOfMSE(datasetArray: number[], networkArray: number[]) {
+export function SummationOfMSE(
+    datasetArray: number[],
+    networkArray: number[]
+): number {
     // mean square error
-    var MSE = function (yI, yi) {
+    var MSE = function (yI: number, yi: number): number {
         return Math.pow(yI - yi, 2);
     };
     var result = 0;
