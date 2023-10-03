@@ -3,17 +3,6 @@ interface IActivation {
     Derivative(weightedInputs: number[], index: number): number;
 }
 
-class ActivationSigmoid implements IActivation {
-    Activate(weightedInputs: number[], index: number): number {
-        return 1 / (1 + Math.exp(-weightedInputs[index]));
-    }
-
-    Derivative(weightedInputs: number[], index: number): number {
-        const sigmoid = this.Activate(weightedInputs, index);
-        return sigmoid * (1 - sigmoid);
-    }
-}
-
 class Layer {
     public readonly numNodesIn: number;
     public readonly numNodesOut: number;
@@ -28,7 +17,7 @@ class Layer {
     constructor(numNodesIn: number, numNodesOut: number, rng: any) {
         this.numNodesIn = numNodesIn;
         this.numNodesOut = numNodesOut;
-        this.activation = new ActivationSigmoid();
+        this.activation = new Sigmoid();
 
         this.weights = new Array(numNodesIn * numNodesOut);
         this.costGradientW = new Array(this.weights.length).fill(0);
