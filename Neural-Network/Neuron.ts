@@ -1,12 +1,14 @@
-class Neuron {
+export class Neuron {
     public weights: number[];
     public bias: number;
 
     constructor(numInputs: number) {
-        this.weights = [];
-        for (let i = 0; i < numInputs; i++) {
-            this.weights.push(Math.random());
-        }
-        this.bias = Math.random();
+        console.log(`neuron-init_numInputs: ${numInputs}`);
+        this.weights = Array.from(
+            { length: numInputs },
+            () => Math.random() * 2 - 1
+        );
+
+        this.bias = Math.random() * 2 - 1;
     }
 }
