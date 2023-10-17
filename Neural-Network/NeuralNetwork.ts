@@ -71,6 +71,7 @@ export class NeuralNetwork {
         const outputs = this.forwardPropagation(inputs);
 
         // Error calculation per neuron
+        console.log(`outputs:`, outputs);
         const outputErrors = [];
         for (let i = 0; i < outputs.length; i++) {
             console.log(
