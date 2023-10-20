@@ -12,42 +12,37 @@ export class NeuralNetwork {
     // Input layer
     let inputLayerNeurons = [];
     for (let i = 0; i < layerSizes[0]; i++) {
-      console.log(`INIT-IN_ neurons: ${layerSizes[0]} inputs: 1`);
+      console.log(`INIT-IN_ new neuron: ${i + 1}/${layerSizes[0]} inputs: 1`);
 
       inputLayerNeurons.push(new Neuron(1));
     }
     this.layers.push(inputLayerNeurons);
 
-    // con
-
     // Hidden layer(s)
-
-    //     for (let i = 1; i < layerSizes.length; i++) {
-    //       console.log(`INIT-HL_ sizes: ${layerSizes[i]}`);
-    //       let layerNeurons = [];
-    //       for (let j = 0; j < layerSizes[i]; j++) {
-    //         console.log(`INIT-HL_ neuron[${j}] inputSize: ${layerSizes[i - 1]}`);
-    //         layerNeurons.push(new Neuron(layerSizes[i - 1]));
-    //       }
-    //       this.layers.push(layerNeurons);
-    //     }
+    for (let i = 1; i < layerSizes.length - 1; i++) {
+      let layerNeurons = [];
+      for (let j = 0; j < layerSizes[i]; j++) {
+        console.log(
+          `INIT-HL_ layer: ${i}/${layerSizes.length - 2} new neuron: ${j + 1}/${
+            layerSizes[i]
+          } inputs: ${layerSizes[i - 1]}`
+        );
+        layerNeurons.push(new Neuron(layerSizes[i - 1]));
+      }
+      this.layers.push(layerNeurons);
+    }
 
     //     // Output layer
-    //     let outputLayerNeurons = [];
-    //     for (let i = 0; i < layerSizes[layerSizes.length - 1]; i++) {
-    //       console.log(
-    //         `INIT-OUT_ neurons: ${layerSizes[layerSizes.length - 2]}`
-    //       );
-    //       outputLayerNeurons.push(new Neuron(layerSizes.length - 2));
-    //     }
-    //     this.layers.push(outputLayerNeurons);
-
-    //     this.layers.push(
-    //       Array.from(
-    //         { length: layerSizes[layerSizes.length - 1] },
-    //         () => new Neuron(layerSizes.length - 2)
-    //       )
-    //     );
+    let outputLayerNeurons = [];
+    for (let i = 0; i < layerSizes[layerSizes.length - 1]; i++) {
+      console.log(
+        `INIT-OUT_ new neuron: ${i + 1}/${
+          layerSizes[layerSizes.length - 1]
+        } inputs: ${layerSizes.length - 2}`
+      );
+      outputLayerNeurons.push(new Neuron(layerSizes.length - 2));
+    }
+    this.layers.push(outputLayerNeurons);
   }
 
   //   public forwardPropagation(inputs: number[]): number[]] {
