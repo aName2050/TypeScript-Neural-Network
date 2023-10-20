@@ -14,6 +14,6 @@ const neuralNetwork = new NeuralNetwork([2, 1, 1]);
 //     console.log(`TRAINING... #${i} => IN: ${data.input} OUT: ${data.output}`);
 //   }
 // }
-// const testInput = [0, 0];
-// const output = neuralNetwork.forwardPropagation(testInput);
-// console.log("Neural Network Output:", neuralNetwork.getResult(output));
+const testInput = [0, 1];
+const output = neuralNetwork.forwardPropagation(testInput);
+console.log("Neural Network Output:", output);
