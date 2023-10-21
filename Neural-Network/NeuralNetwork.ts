@@ -1,125 +1,125 @@
-import { Neuron } from "./Neuron";
+import { Neuron } from './Neuron';
 
 export class NeuralNetwork {
-	public layers: Neuron[][];
+    public layers: Neuron[][];
 
-	constructor(layerSizes: number[]) {
-		this.layers = [];
+    constructor(layerSizes: number[]) {
+        this.layers = [];
 
-		console.log(`INIT_ layerSizes: ${layerSizes}`);
-		console.log(`INIT_ layers: ${layerSizes.length}`);
+        console.log(`INIT_ layerSizes: ${layerSizes}`);
+        console.log(`INIT_ layers: ${layerSizes.length}`);
 
-		// Input layer
-		let inputLayerNeurons: Neuron[] = [];
-		for (let i = 0; i < layerSizes[0]; i++) {
-			console.log(
-				`INIT-IN_ new neuron: ${i + 1}/${layerSizes[0]} inputs: 1`
-			);
+        // Input layer
+        let inputLayerNeurons: Neuron[] = [];
+        for (let i = 0; i < layerSizes[0]; i++) {
+            console.log(
+                `INIT-IN_ new neuron: ${i + 1}/${layerSizes[0]} inputs: 1`
+            );
 
-			inputLayerNeurons.push(new Neuron(1));
-		}
-		this.layers.push(inputLayerNeurons);
+            inputLayerNeurons.push(new Neuron(1));
+        }
+        this.layers.push(inputLayerNeurons);
 
-		// Hidden layer(s)
-		for (let i = 1; i < layerSizes.length - 1; i++) {
-			let layerNeurons: Neuron[] = [];
-			for (let j = 0; j < layerSizes[i]; j++) {
-				console.log(
-					`INIT-HL_ layer: ${i}/${
-						layerSizes.length - 2
-					} new neuron: ${j + 1}/${layerSizes[i]} inputs: ${
-						layerSizes[i - 1]
-					}`
-				);
-				layerNeurons.push(new Neuron(layerSizes[i - 1]));
-			}
-			this.layers.push(layerNeurons);
-		}
+        // Hidden layer(s)
+        for (let i = 1; i < layerSizes.length - 1; i++) {
+            let layerNeurons: Neuron[] = [];
+            for (let j = 0; j < layerSizes[i]; j++) {
+                console.log(
+                    `INIT-HL_ layer: ${i}/${
+                        layerSizes.length - 2
+                    } new neuron: ${j + 1}/${layerSizes[i]} inputs: ${
+                        layerSizes[i - 1]
+                    }`
+                );
+                layerNeurons.push(new Neuron(layerSizes[i - 1]));
+            }
+            this.layers.push(layerNeurons);
+        }
 
-		// Output layer
-		let outputLayerNeurons: Neuron[] = [];
-		for (let i = 0; i < layerSizes[layerSizes.length - 1]; i++) {
-			console.log(
-				`INIT-OUT_ new neuron: ${i + 1}/${
-					layerSizes[layerSizes.length - 1]
-				} inputs: ${layerSizes.length - 2}`
-			);
-			outputLayerNeurons.push(new Neuron(layerSizes.length - 2));
-		}
-		this.layers.push(outputLayerNeurons);
-	}
+        // Output layer
+        let outputLayerNeurons: Neuron[] = [];
+        for (let i = 0; i < layerSizes[layerSizes.length - 1]; i++) {
+            console.log(
+                `INIT-OUT_ new neuron: ${i + 1}/${
+                    layerSizes[layerSizes.length - 1]
+                } inputs: ${layerSizes.length - 2}`
+            );
+            outputLayerNeurons.push(new Neuron(layerSizes.length - 2));
+        }
+        this.layers.push(outputLayerNeurons);
+    }
 
-	public forwardPropagation(inputs: number[]): number[] {
-		let outputs: number[] = inputs;
+    public forwardPropagation(inputs: number[]): number[] {
+        let outputs: number[] = inputs;
 
-		for (const layer of this.layers) {
-			const newOutputs: number[] = [];
-			for (const neuron of layer) {
-				console.log(
-					`FWD-PROP_ weights: ${neuron.weights} bias: ${neuron.bias}`
-				);
-				let weightedSum: number = 0;
-				for (let i = 0; i < neuron.weights.length; i++) {
-					console.log(
-						`FWD-PROP_ weightedSum-equation: (${i + 1}/${
-							neuron.weights.length
-						}) ${weightedSum} + ${neuron.weights[i]} * ${
-							outputs[i]
-						}`
-					);
+        for (const layer of this.layers) {
+            const newOutputs: number[] = [];
+            for (const neuron of layer) {
+                console.log(
+                    `FWD-PROP_ weights: ${neuron.weights} bias: ${neuron.bias}`
+                );
+                let weightedSum: number = 0;
+                for (let i = 0; i < neuron.weights.length; i++) {
+                    console.log(
+                        `FWD-PROP_ weightedSum-equation: (${i + 1}/${
+                            neuron.weights.length
+                        }) ${weightedSum} + ${neuron.weights[i]} * ${
+                            outputs[i]
+                        }`
+                    );
 
-					weightedSum += neuron.weights[i] * outputs[i];
-				}
-				console.log(`FWD-PROP_ weightedSum: ${weightedSum}`);
+                    weightedSum += neuron.weights[i] * outputs[i];
+                }
+                console.log(`FWD-PROP_ weightedSum: ${weightedSum}`);
 
-				const activation: number = this.sigmoid(
-					weightedSum + neuron.bias
-				);
-				newOutputs.push(activation);
-			}
-		}
-		console.log(`FWD-PROP_ output:`, outputs);
+                const activation: number = this.sigmoid(
+                    weightedSum + neuron.bias
+                );
+                newOutputs.push(activation);
+            }
+        }
+        console.log(`FWD-PROP_ output:`, outputs);
 
-		return outputs;
-	}
+        return outputs;
+    }
 
-	public fwdPropRef(inputs: number[]): number[] {
-		let outputs: number[] = inputs;
+    public fwdPropRef(inputs: number[]): number[] {
+        let outputs: number[] = inputs;
 
-		for (const layer of this.layers) {
-			const newOutputs: number[] = [];
-			for (const neuron of layer) {
-				console.log(
-					`fwdProp_ weights: ${neuron.weights}; bias: ${neuron.bias}`
-				);
-				let weightedSum: number = 0;
-				for (let i = 0; i < neuron.weights.length; i++) {
-					console.log(
-						`fwdProp_ weightedSum_eqauation: (${i}) ${weightedSum} + ${neuron.weights[i]} * ${outputs[i]}`
-					);
+        for (const layer of this.layers) {
+            const newOutputs: number[] = [];
+            for (const neuron of layer) {
+                console.log(
+                    `fwdProp_ weights: ${neuron.weights}; bias: ${neuron.bias}`
+                );
+                let weightedSum: number = 0;
+                for (let i = 0; i < neuron.weights.length; i++) {
+                    console.log(
+                        `fwdProp_ weightedSum_eqauation: (${i}) ${weightedSum} + ${neuron.weights[i]} * ${outputs[i]}`
+                    );
 
-					weightedSum += neuron.weights[i] * outputs[i];
-				}
-				console.log(`fwdProp_ weightedSum: ${weightedSum}`);
+                    weightedSum += neuron.weights[i] * outputs[i];
+                }
+                console.log(`fwdProp_ weightedSum: ${weightedSum}`);
 
-				const activation = this.sigmoid(weightedSum + neuron.bias);
-				newOutputs.push(activation);
-			}
-			outputs = newOutputs;
-		}
-		console.log(`fwdProp_ output:`, outputs);
+                const activation = this.sigmoid(weightedSum + neuron.bias);
+                newOutputs.push(activation);
+            }
+            outputs = newOutputs;
+        }
+        console.log(`fwdProp_ output:`, outputs);
 
-		return outputs;
-	}
+        return outputs;
+    }
 
-	// Sigmoid functions
-	private sigmoid(x: number): number {
-		return 1 / (1 + Math.exp(-x));
-	}
+    // Sigmoid functions
+    private sigmoid(x: number): number {
+        return 1 / (1 + Math.exp(-x));
+    }
 
-	private sigmoidDerivative(x: number): number {
-		return this.sigmoid(x) * (1 - this.sigmoid(x));
-	}
+    private sigmoidDerivative(x: number): number {
+        return this.sigmoid(x) * (1 - this.sigmoid(x));
+    }
 }
 
 // public forwardPropagation(inputs: number[]): number[] {

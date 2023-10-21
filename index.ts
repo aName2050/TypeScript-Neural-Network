@@ -1,9 +1,9 @@
-import { data as trainingData } from "./Config/Data/dataset.json"; // XOR training dataset
+import { data as trainingData } from './Config/Data/dataset.json'; // XOR training dataset
 /*
 Layer size needs to be fewer than the previous layer size, excluding input layer
 [inputLayerSize, ...hiddenLayerSizes < prevLayerSize, outputLayer < prevHiddenLayerSize]
 */
-import { NeuralNetwork } from "./Neural-Network/NeuralNetwork";
+import { NeuralNetwork } from './Neural-Network/NeuralNetwork';
 console.log(`training data:`, trainingData);
 
 const neuralNetwork = new NeuralNetwork([2, 1, 1]);
@@ -16,4 +16,4 @@ const neuralNetwork = new NeuralNetwork([2, 1, 1]);
 // }
 const testInput = [0, 1];
 const output = neuralNetwork.forwardPropagation(testInput);
-console.log("Neural Network Output:", output);
+console.log('Neural Network Output:', output);
