@@ -49,6 +49,9 @@ export class NeuralNetwork {
         this.layers.push(outputLayerNeurons);
     }
 
+    /**
+     * Forward Propagation Algorithm
+     */
     public forwardPropagation(inputs: number[]): number[] {
         let outputs: number[] = inputs;
 
@@ -77,39 +80,24 @@ export class NeuralNetwork {
                 );
                 newOutputs.push(activation);
             }
+            outputs = newOutputs;
         }
         console.log(`FWD-PROP_ output:`, outputs);
 
         return outputs;
     }
 
-    public fwdPropRef(inputs: number[]): number[] {
-        let outputs: number[] = inputs;
-
-        for (const layer of this.layers) {
-            const newOutputs: number[] = [];
-            for (const neuron of layer) {
-                console.log(
-                    `fwdProp_ weights: ${neuron.weights}; bias: ${neuron.bias}`
-                );
-                let weightedSum: number = 0;
-                for (let i = 0; i < neuron.weights.length; i++) {
-                    console.log(
-                        `fwdProp_ weightedSum_eqauation: (${i}) ${weightedSum} + ${neuron.weights[i]} * ${outputs[i]}`
-                    );
-
-                    weightedSum += neuron.weights[i] * outputs[i];
-                }
-                console.log(`fwdProp_ weightedSum: ${weightedSum}`);
-
-                const activation = this.sigmoid(weightedSum + neuron.bias);
-                newOutputs.push(activation);
-            }
-            outputs = newOutputs;
+    /**
+     * Gets the highest result from the forward propagation algorithm
+     */
+    public getResult(results: number[]): number {
+        let resultList: number[] = [];
+        for (let i = 0; i < results.length; i++) {
+            resultList.push(Math.round(results[i]));
         }
-        console.log(`fwdProp_ output:`, outputs);
+        const result: number = Math.max(...resultList);
 
-        return outputs;
+        return result;
     }
 
     // Sigmoid functions
@@ -120,72 +108,73 @@ export class NeuralNetwork {
     private sigmoidDerivative(x: number): number {
         return this.sigmoid(x) * (1 - this.sigmoid(x));
     }
+
+    // Training algorithm
+    public train(
+        inputs: number[],
+        targets: number[],
+        learnRate: number = 0.1
+    ): void {
+        // Get results from forward propagation algorithm
+        const outputs: number[] = this.forwardPropagation(inputs);
+
+        // Error calculation per neuron
+        console.log(`TRAINING_ fwdProp-outputs:`, outputs);
+        const outputErrors: number[] = [];
+        for (let i = 0; i < outputs.length; i++) {
+            console.log(
+                `TRAINING_ err-calc (${i + 1}/${outputs.length}) target: ${
+                    targets[i]
+                } network: ${outputs[i]} error: ${targets[i] - outputs[i]}`
+            );
+
+            outputErrors.push(targets[i] - outputs[i]);
+        }
+        let networkError: number = 0;
+        for (let j = 0; j < outputErrors.length; j++) {
+            networkError += outputErrors[j];
+        }
+        networkError = networkError / outputErrors.length;
+        console.log(`TRAINING_ networkError: ${networkError}`);
+
+        // Back propagation algorithm for training neural networks
+        // Output layer training
+        for (let i = 0; i < this.layers[this.layers.length - 1].length; i++) {
+            const neuron: Neuron = this.layers[this.layers.length - 1][i];
+
+            console.log(
+                `TRAINING_ OUTPUT-LAYER neuron ${i + 1}/${
+                    this.layers[this.layers.length - 1].length
+                }`
+            );
+            const oldBias = neuron.bias;
+            neuron.bias +=
+                outputErrors[i] *
+                this.sigmoidDerivative(outputs[i]) *
+                learnRate;
+            console.log(
+                `TRAINING_ OUTPUT-LAYER bias: ${oldBias} => ${neuron.bias}`
+            );
+            // weights
+            for (let j = 0; j < neuron.weights.length; j++) {
+                const oldWeight = neuron.weights[j];
+                neuron.weights[j] +=
+                    outputErrors[i] *
+                    this.sigmoidDerivative(outputs[i]) *
+                    inputs[j] *
+                    learnRate;
+                console.log(
+                    `TRAINING_ OUTPUT-LAYER weight (${j + 1}/${
+                        neuron.weights.length
+                    }): ${oldWeight} => ${neuron.weights[j]}`
+                );
+            }
+        }
+
+        // Hidden layer(s) training
+    }
 }
 
-// public forwardPropagation(inputs: number[]): number[] {
-//   let outputs: number[] = inputs;
-
-//   for (const layer of this.layers) {
-//     const newOutputs: number[] = [];
-//     for (const neuron of layer) {
-//       console.log(
-//         `fwdProp_ weights: ${neuron.weights}; bias: ${neuron.bias}`
-//       );
-//       let weightedSum: number = 0;
-//       for (let i = 0; i < neuron.weights.length; i++) {
-//         console.log(
-//           `fwdProp_ weightedSum_eqauation: (${i}) ${weightedSum} + ${neuron.weights[i]} * ${outputs[i]}`
-//         );
-
-//         weightedSum += neuron.weights[i] * outputs[i];
-//       }
-//       console.log(`fwdProp_ weightedSum: ${weightedSum}`);
-
-//       const activation = this.sigmoid(weightedSum + neuron.bias);
-//       newOutputs.push(activation);
-//     }
-//     outputs = newOutputs;
-//   }
-//   console.log(`fwdProp_ output:`, outputs);
-
-//   return outputs;
-// }
-
-//   private sigmoid(x: number): number {
-//     return 1 / (1 + Math.exp(-x));
-//   }
-
-//   public train(
-//     inputs: number[],
-//     targets: number[],
-//     learningRate: number = 0.1
-//   ): void {
-//     // Forward propagation
-//     const outputs: number[] = this.forwardPropagation(inputs);
-
-//     // Error calculation per neuron
-//     console.log(`TRAINING_ outputs:`, outputs);
-//     const outputErrors: number[] = [];
-//     for (let i = 0; i < outputs.length; i++) {
-//       console.log(
-//         `TRAINING_ERR_CALC_ target: i:(${i}) ${targets[i]} output: ${
-//           outputs[i]
-//         } error: ${targets[i] - outputs[i]}`
-//       );
-//       outputErrors.push(targets[i] - outputs[i]);
-//     }
-
-//     // Backpropagation learning algorithm
-//     // update biases and weights for output layer
-//     for (let i = 0; i < this.layers[this.layers.length - 1].length; i++) {
-//       const neuron: Neuron = this.layers[this.layers.length - 1][i];
-//       if (outputErrors[i] == undefined)
-//         console.log(`TRAINING_ missing outputErrors[i:${i}]`);
-//       console.log(
-//         `TRAINING_ bias: ${neuron.bias} outputErrors: i:${outputErrors[i]} LR: ${learningRate}`
-//       );
-//       neuron.bias +=
-//         outputErrors[i] * this.sigmoidDerivative(outputs[i]) * learningRate;
 //       for (let j = 0; j < neuron.weights.length; j++) {
 //         if (outputErrors[i] == undefined)
 //           console.log(`TRAINING_ missing outputErrors[j:${j}]`);
@@ -227,14 +216,4 @@ export class NeuralNetwork {
 //         }
 //       }
 //     }
-//   }
-
-//   public getResult(results: number[]): number {
-//     let resultList: number[] = [];
-//     for(let i=0;i<results.length;i++){
-//       resultList.push(Math.round(results[i]));
-//     }
-//     const result: number = Math.max(...resultList);
-
-//     return result;
 //   }
