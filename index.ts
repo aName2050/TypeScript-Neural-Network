@@ -27,7 +27,7 @@ for (let i = 0; i < trainingCycles; i++) {
 	}
 }
 // Testing
-const testInput: number[] = [1, 1];
+const testInput: number[] = [0, 1];
 console.log(`TESTING_ input:`, testInput);
 
 const output: number[] = neuralNetwork.forwardPropagation(testInput);

@@ -136,7 +136,6 @@ export class NeuralNetwork {
 			networkError += outputErrors[j];
 		}
 		networkError = networkError / outputErrors.length;
-		console.log(`TRAINING_ networkError: ${networkError}`);
 
 		// Back propagation algorithm for training neural networks
 		// Output layer training
