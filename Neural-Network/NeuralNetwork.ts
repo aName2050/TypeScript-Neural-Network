@@ -173,7 +173,11 @@ export class NeuralNetwork {
 			// loop through each hidden layer
 			for (let n = 0; n < this.layers[i].length; n++) {
 				// loop through each neuron
-				const neuron: Neuron = this;
+				const neuron: Neuron = this.layers[i][n];
+				let error: number = 0;
+				for(let j=0;j<this.layers[i+1].length;j++){
+					// calculate errors for weights
+				}
 			}
 		}
 	}
