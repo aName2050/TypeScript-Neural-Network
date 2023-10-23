@@ -131,11 +131,6 @@ export class NeuralNetwork {
 
 			outputErrors.push(targets[i] - outputs[i]);
 		}
-		let networkError: number = 0;
-		for (let j = 0; j < outputErrors.length; j++) {
-			networkError += outputErrors[j];
-		}
-		networkError = networkError / outputErrors.length;
 
 		// Back propagation algorithm for training neural networks
 		// Output layer training
@@ -178,49 +173,55 @@ export class NeuralNetwork {
 			// loop through each hidden layer
 			for (let n = 0; n < this.layers[i].length; n++) {
 				// loop through each neuron
-				const neuron: Neuron = this.layers[i][n];
-				let error: number = 0;
-				for (let j = 0; j < this.layers[i + 1].length; j++) {
-					// calculate errors for weights
-					console.log(
-						`TRAINING_ HIDDEN-LAYER layer ${i}/${
-							this.layers.length - 2
-						} neuron ${n + 1}/${this.layers[i].length}`
-					);
-					error +=
-						this.layers[i + 1][j].weights[
-							this.layers[i].indexOf(neuron)
-						] * outputErrors[j];
-				}
-				let weightedSum: number = 0;
-				for (let k = 0; k < neuron.weights.length; k++) {
-					// loop through weights and calculate weightedSum to calculate new error
-					weightedSum += neuron.weights[k] * inputs[k];
-				}
-
-				error *= this.sigmoidDerivative(weightedSum + neuron.bias);
-
-				const oldBias = neuron.bias;
-				neuron.bias += error * learnRate;
-				console.log(
-					`TRAINING_ HIDDEN-LAYER ${i}/${
-						this.layers.length - 2
-					} bias: ${oldBias} => ${neuron.bias}`
-				);
-
-				for (let L = 0; L < neuron.weights.length; L++) {
-					// loop through weights and update them
-					const oldWeight = neuron.weights[L];
-					neuron.weights[L] += error * inputs[L] * learnRate;
-					console.log(
-						`TRAINING_ HIDDEN-LAYER ${i}/${
-							this.layers.length - 2
-						} weight (${L + 1}/${
-							neuron.weights.length
-						}): ${oldWeight} => ${neuron.weights[L]}`
-					);
-				}
+				const neuron: Neuron = this;
 			}
 		}
 	}
 }
+/*
+for (let n = 0; n < this.layers[i].length; n++) {
+	// loop through each neuron
+	const neuron: Neuron = this.layers[i][n];
+	let error: number = 0;
+	for (let j = 0; j < this.layers[i + 1].length; j++) {
+		// calculate errors for weights
+		console.log(
+			`TRAINING_ HIDDEN-LAYER layer ${i}/${
+				this.layers.length - 2
+			} neuron ${n + 1}/${this.layers[i].length}`
+		);
+		error +=
+			this.layers[i + 1][j].weights[
+				this.layers[i].indexOf(neuron)
+			] * outputErrors[j];
+	}
+	let weightedSum: number = 0;
+	for (let k = 0; k < neuron.weights.length; k++) {
+		// loop through weights and calculate weightedSum to calculate new error
+		weightedSum += neuron.weights[k] * inputs[k];
+	}
+
+	error *= this.sigmoidDerivative(weightedSum + neuron.bias);
+
+	const oldBias = neuron.bias;
+	neuron.bias += error * learnRate;
+	console.log(
+		`TRAINING_ HIDDEN-LAYER ${i}/${
+			this.layers.length - 2
+		} bias: ${oldBias} => ${neuron.bias}`
+	);
+
+	for (let L = 0; L < neuron.weights.length; L++) {
+		// loop through weights and update them
+		const oldWeight = neuron.weights[L];
+		neuron.weights[L] += error * inputs[L] * learnRate;
+		console.log(
+			`TRAINING_ HIDDEN-LAYER ${i}/${
+				this.layers.length - 2
+			} weight (${L + 1}/${
+				neuron.weights.length
+			}): ${oldWeight} => ${neuron.weights[L]}`
+		);
+	}
+}
+*/
