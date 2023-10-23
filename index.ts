@@ -1,5 +1,5 @@
 import { data as trainingData } from "./Config/Data/dataset.json"; // XOR training dataset
-import { learnRate, trainingCycles } from "./Config/config"; // training config
+import { learnRate, trainingCycles } from "./Config/config.ts"; // training config
 /*
 Layer size needs to be fewer than the previous layer size, excluding input layer
 [inputLayerSize, ...hiddenLayerSizes < prevLayerSize, outputLayer < prevHiddenLayerSize]
