@@ -1,4 +1,5 @@
 import { data as trainingData } from "./Config/Data/dataset.json"; // XOR training dataset
+import { learnRate, trainingCycles } from "./Config/config"; // training config
 /*
 Layer size needs to be fewer than the previous layer size, excluding input layer
 [inputLayerSize, ...hiddenLayerSizes < prevLayerSize, outputLayer < prevHiddenLayerSize]
@@ -8,8 +9,6 @@ console.log(`TRAINING-DATA:`, trainingData);
 
 const neuralNetwork: NeuralNetwork = new NeuralNetwork([2, 1, 1]);
 // Training
-const trainingCycles: number = 1;
-const learnRate: number = 0.01;
 console.log(`TRAINING_ training begun; ${trainingCycles} training cycles`);
 for (let i = 0; i < trainingCycles; i++) {
 	for (let j = 0; j < trainingData.length; j++) {
