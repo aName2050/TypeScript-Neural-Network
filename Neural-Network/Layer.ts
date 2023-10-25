@@ -45,6 +45,7 @@ export class Layer {
             const output = neuron.calculateOutput(inputs);
             const error = targets[i] - output;
             neuron.updateWeights(inputs, error, learnRate);
+            neuron.updateBias(error, learnRate);
         }
     }
 }
