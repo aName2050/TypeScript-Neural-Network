@@ -9,26 +9,26 @@ console.log(`TRAINING-DATA:`, trainingData);
 
 const neuralNetwork: NeuralNetwork = new NeuralNetwork([2, 1, 1]);
 // Training
-console.log(`TRAINING_ training begun; ${trainingCycles} training cycles`);
-for (let i = 0; i < trainingCycles; i++) {
-    for (let j = 0; j < trainingData.length; j++) {
-        const data = trainingData[j];
+// console.log(`TRAINING_ training begun; ${trainingCycles} training cycles`);
+// for (let i = 0; i < trainingCycles; i++) {
+//     for (let j = 0; j < trainingData.length; j++) {
+//         const data = trainingData[j];
 
-        console.log(
-            `TRAINING_ cycle: ${i + 1}/${trainingCycles} training-data: ${
-                j + 1
-            }/${trainingData.length}`
-        );
-        console.log(
-            `TRAINING_ EXPECTED... input: ${data.input} output: ${data.output}`
-        );
+//         console.log(
+//             `TRAINING_ cycle: ${i + 1}/${trainingCycles} training-data: ${
+//                 j + 1
+//             }/${trainingData.length}`
+//         );
+//         console.log(
+//             `TRAINING_ EXPECTED... input: ${data.input} output: ${data.output}`
+//         );
 
-        neuralNetwork.train(data.input, data.output, learnRate);
-    }
-}
+//         neuralNetwork.train(data.input, data.output, learnRate);
+//     }
+// }
 // Testing
-const testInput: number[] = [0, 1];
-console.log(`TESTING_ input:`, testInput);
+// const testInput: number[] = [0, 1];
+// console.log(`TESTING_ input:`, testInput);
 
-const output: number[] = neuralNetwork.forwardPropagation(testInput);
-console.log('Neural Network Output:', output);
+// const output: number[] = neuralNetwork.forwardPropagation(testInput);
+// console.log('Neural Network Output:', output);

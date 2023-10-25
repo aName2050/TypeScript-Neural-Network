@@ -11,28 +11,6 @@ export class Neuron {
         this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
 
         this.bias = Random(-1, 1);
-
-        console.log(
-            `INIT_ new neuron (${inputs} inputs) bias: ${this.bias} weights:`,
-            this.weights
-        );
-    }
-
-    /**
-     *
-     * @param inputs The inputs of this neuron to calculate the output of this neuron
-     * @returns The weighted sum of the neuron after being passed through the activation function
-     */
-    public calculateOutput(inputs: number[]): number {
-        if (inputs.length !== this.weights.length)
-            throw new Error('Number of inputs must match number of weights');
-
-        const weightedSum =
-            inputs.reduce(
-                (sum, input, index) => sum + input * this.weights[index],
-                0
-            ) + this.bias;
-        return this.sigmoid(weightedSum);
     }
 
     /**

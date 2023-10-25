@@ -12,14 +12,17 @@ export class NeuralNetwork {
     constructor(layerSizes: number[]) {
         this.layers = [];
 
+        console.log(`INIT_ new layer (INPUT) neurons: ${layerSizes[0]}`);
+        this.layers.push(new Layer(layerSizes[0], 0));
+        // Hidden layer(s) and output layer initialization
         for (let i = 1; i < layerSizes.length; i++) {
-            const neuronsInPrevLayer = layerSizes[i - 1];
-            const neuronsInCurrLayer = layerSizes[i];
             console.log(
-                `INIT_ new layer: ${layerSizes[i]} neurons w/ ${
-                    layerSizes[i - 1]
-                } inputs`
+                `INIT_ new layer  (${i + 1}/${layerSizes.length}) neurons: ${
+                    layerSizes[i]
+                }`
             );
+            const neuronsInPrevLayer: number = layerSizes[i - 1];
+            const neuronsInCurrLayer: number = layerSizes[i];
             this.layers.push(new Layer(neuronsInCurrLayer, neuronsInPrevLayer));
         }
     }
@@ -30,11 +33,8 @@ export class NeuralNetwork {
      * @returns The processed output
      */
     public forwardPropagation(inputs: number[]): number[] {
-        let outputs = inputs;
-        for (const layer of this.layers) {
-            outputs = layer.getOutputs(outputs);
-        }
-        return outputs;
+        // coming soon!
+        return [NaN];
     }
 
     /**
@@ -48,14 +48,6 @@ export class NeuralNetwork {
         targets: number[],
         learnRate: number = 0.1
     ): void {
-        let layerInputs = inputs;
-
-        for (let i = 0; i < this.layers.length; i++) {
-            console.log(`TRAINING_ ${i + 1}/${this.layers.length} layers`);
-            const layer = this.layers[i];
-            const layerTargets = targets.slice(i, i + 1); // Seperate out the targets for the current layer
-            layer.trainLayer(layerInputs, layerTargets, learnRate);
-            layerInputs = layer.getOutputs(layerInputs); // Prepare inputs for next layer training
-        }
+        // coming soon!
     }
 }
