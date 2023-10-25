@@ -11,6 +11,11 @@ export class Neuron {
         this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
 
         this.bias = Random(-1, 1);
+
+        console.log(
+            `INIT_ new neuron (${inputs} inputs) bias: ${this.bias} weights:`,
+            this.weights
+        );
     }
 
     /**
