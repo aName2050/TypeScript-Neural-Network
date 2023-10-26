@@ -13,7 +13,7 @@ export class NeuralNetwork {
         this.layers = [];
 
         console.log(`INIT_ new layer (INPUT) neurons: ${layerSizes[0]}`);
-        this.layers.push(new Layer(layerSizes[0], 0));
+        this.layers.push(new Layer(layerSizes[0], 0, true));
         // Hidden layer(s) and output layer initialization
         for (let i = 1; i < layerSizes.length; i++) {
             console.log(

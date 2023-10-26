@@ -7,10 +7,25 @@ export class Neuron {
      *
      * @param inputs The number of inputs for this neuron
      */
-    constructor(inputs: number) {
-        this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
+    constructor(inputs: number, noWeightsAndBiases: boolean = false) {
+        if (noWeightsAndBiases) {
+            this.weights = [1];
+            this.bias = 0;
+        } else {
+            this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
 
-        this.bias = Random(-1, 1);
+            this.bias = Random(-1, 1);
+        }
+    }
+
+    /**
+     *
+     * @param inputs The inputs of the neuron
+     * @returns The output of the neuron
+     */
+    public calculateNeuronOutput(inputs: number[]): number {
+        // coming soon!
+        return NaN;
     }
 
     /**

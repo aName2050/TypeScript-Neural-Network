@@ -8,15 +8,23 @@ export class Layer {
      * @param neurons The number of neurons in this layer
      * @param inputs The number of inputs for each neuron
      */
-    constructor(neurons: number, inputs: number) {
+    constructor(neurons: number, inputs: number, inputLayer: boolean = false) {
         this.Neurons = [];
 
         for (let i = 0; i < neurons; i++) {
             console.log(
-                `INIT_ new neuron (${i + 1}/${neurons}) inputs: ${inputs}`
+                `INIT_ new neuron (${
+                    i + 1
+                }/${neurons}) inputs: ${inputs} inputLayerNeuron?: ${inputLayer}`
             );
-            this.Neurons.push(new Neuron(inputs));
+
+            this.Neurons.push(new Neuron(inputs, inputLayer));
         }
+    }
+
+    public calculateLayerOutputs(inputs: number[]): number[] {
+        // coming soon!
+        return [NaN];
     }
 
     /**
