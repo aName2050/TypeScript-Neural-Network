@@ -15,15 +15,6 @@ export class Neuron {
 
     /**
      *
-     * @param x The number to pass to the Sigmoid function
-     * @returns The number squished between 0 and 1
-     */
-    private sigmoid(x: number): number {
-        return 1 / (1 + Math.exp(-x));
-    }
-
-    /**
-     *
      * @param inputs The inputs used to train the layer the neuron is in
      * @param error The error of the neuron
      * @param learnRate The rate at which the network learns
