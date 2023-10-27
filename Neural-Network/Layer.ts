@@ -22,27 +22,17 @@ export class Layer {
 		}
 	}
 
+	/**
+	 *
+	 * @param inputs The inputs to the layer
+	 * @returns The layer's output
+	 */
 	public calculateLayerOutputs(inputs: number[]): number[] {
-		// coming soon!
-		return [NaN];
-	}
-
-	/**
-	 *
-	 * @param x The number to pass to the Sigmoid function
-	 * @returns The number squished between 0 and 1
-	 */
-	private sigmoid(x: number): number {
-		return 1 / (1 + Math.exp(-x));
-	}
-
-	/**
-	 *
-	 * @param x The number to pass to the sigmoid derivative function
-	 * @returns The result of the function
-	 */
-	private sigmoidDerivative(x: number): number {
-		const sigmoid: number = this.sigmoid(x);
-		return sigmoid * (1 - sigmoid);
+		let output: number[] = [];
+		for (let i = 0; i < this.Neurons.length; i++) {
+			const neuron = this.Neurons[i];
+			output.push(neuron.calculateNeuronOutput(inputs));
+		}
+		return output;
 	}
 }
