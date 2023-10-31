@@ -74,12 +74,6 @@ export class NeuralNetwork {
 			const neuron: Neuron =
 				this.layers[this.layers.length - 1].Neurons[i];
 
-			console.log(
-				`TRAINING_ OUTPUT-LAYER neuron (${i + 1}/${
-					this.layers[this.layers.length - 1].Neurons.length
-				})`
-			);
-
 			// Update bias
 			const oldBias: number = neuron.bias;
 			neuron.bias +=
@@ -129,7 +123,25 @@ export class NeuralNetwork {
 					) + neuron.bias
 				);
 
-				// neuron
+				// update neuron weights and bias
+				const oldBias = neuron.bias;
+				neuron.bias += error * learnRate;
+				console.log(
+					`TRAINING_ HIDDEN-LAYER neuron (${n + 1}/${
+						this.layers[this.layers.length - 1].Neurons.length
+					}) bias: ${oldBias} => ${neuron.bias}`
+				);
+				for (let j = 0; j < neuron.weights.length; j++) {
+					const oldWeight = neuron.weights[j];
+					neuron.weights[j] += error * inputs[j] * learnRate;
+					console.log(
+						`TRAINING_ HIDDEN-LAYER neuron (${n + 1}/${
+							this.layers[this.layers.length - 1].Neurons.length
+						}) weight ${j + 1}/${
+							neuron.weights.length
+						}: ${oldWeight} => ${neuron.weights[j]}`
+					);
+				}
 			}
 		}
 	}

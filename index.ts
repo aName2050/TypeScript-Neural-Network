@@ -9,7 +9,6 @@ import { Neuron } from "./Neural-Network/Neuron";
 console.log(`TRAINING-DATA:`, trainingData);
 
 const neuralNetwork: NeuralNetwork = new NeuralNetwork([2, 1, 1]);
-const neuron: Neuron = new Neuron(2, false);
 // Training
 console.log(`TRAINING_ training begun; ${learnCycles} training cycles`);
 for (let i = 0; i < learnCycles; i++) {
