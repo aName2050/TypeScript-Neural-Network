@@ -2,6 +2,8 @@ import { Calculus } from "../Math/Calculus";
 import { Random } from "../Math/Math";
 import { Activation } from "../Math/Activation";
 
+const calculus = new Calculus();
+
 export class Neuron {
 	public bias: number;
 	public weights: number[];
@@ -19,5 +21,13 @@ export class Neuron {
 
 		this.bias = Random(1, -1);
 		this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
+	}
+
+	public CalculateNeuronActivation(neuronInputs: number[]): number {
+		let z: number = calculus.WeightedSumCalculation(
+			neuronInputs,
+			this.weights
+		);
+		return z + this.bias;
 	}
 }

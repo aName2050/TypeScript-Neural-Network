@@ -43,4 +43,9 @@ export class NeuralNetwork {
 			);
 		}
 	}
+
+	public forwardPropagation(inputs: number[]): number[] {
+		// coming soon!
+		return [NaN];
+	}
 }
