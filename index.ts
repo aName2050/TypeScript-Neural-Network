@@ -4,3 +4,4 @@ import { learnCycles, learnRate } from "./Config/config.json"; // training confi
 import { NeuralNetwork } from "./src/Network/NeuralNetwork";
 
 const NN = new NeuralNetwork(2, 1, 1);
+NN.forwardPropagation([0, 0]);

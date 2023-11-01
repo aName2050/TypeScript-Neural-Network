@@ -7,6 +7,7 @@ export class NeuralNetwork {
 	 *
 	 * @param layerSizes The sizes of each layer
 	 * The first parameter is always the input layer and the last parameter is always the output layer
+	 * The hidden layers must be smaller then the previous layer to avoid `NaN` outputs
 	 * @example
 	 * const NN = new NeuralNetwork(2, 1, 1);
 	 */
@@ -50,8 +51,36 @@ export class NeuralNetwork {
 	 * @returns THe output of the network
 	 */
 	public forwardPropagation(inputs: number[]): number[] {
-		// coming soon!
-		return [NaN];
+		let outputs: number[] = [];
+		// Loop through each layer, skipping the input layer
+		let layerOutput: number[] = inputs;
+		for (let i = 1; i < this.Neurons.length; i++) {
+			let tmp: number[] = [];
+			for (let j = 0; j < this.Neurons[i].length; j++) {
+				console.log(
+					`FWD-PROP_ layer (${i}/${
+						this.Neurons.length - 1
+					}) neuron (${j + 1}/${
+						this.Neurons[i].length
+					}) > prev layerOutput: `,
+					layerOutput
+				);
+
+				tmp.push(
+					this.Neurons[i][j].CalculateNeuronActivation(layerOutput)
+				);
+			}
+			console.log(
+				`FWD-PROP_ layer (${i}/${
+					this.Neurons.length - 1
+				}) > curr layerOutput: `,
+				tmp
+			);
+			layerOutput = tmp;
+			outputs = layerOutput;
+		}
+		console.log(`FWD-PROP_ networkOutput: `, outputs);
+		return outputs;
 	}
 
 	public train(inputs: number[], targets: number[], learnRate: number): void {
