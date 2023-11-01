@@ -3,6 +3,7 @@ import { Random } from '../Math/Math';
 import { Activation } from '../Math/Activation';
 
 const calculus = new Calculus();
+const activation = new Activation();
 
 export class Neuron {
     public bias: number;
@@ -23,11 +24,16 @@ export class Neuron {
         this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
     }
 
+    /**
+     *
+     * @param neuronInputs The inputs of the neuron
+     * @returns The output of the neuron
+     */
     public CalculateNeuronActivation(neuronInputs: number[]): number {
         let z: number = calculus.WeightedSumCalculation(
             neuronInputs,
             this.weights
         );
-        return z + this.bias;
+        return activation.Sigmoid(z + this.bias);
     }
 }

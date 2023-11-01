@@ -44,8 +44,17 @@ export class NeuralNetwork {
         }
     }
 
+    /**
+     *
+     * @param inputs The inputs of the network
+     * @returns THe output of the network
+     */
     public forwardPropagation(inputs: number[]): number[] {
         // coming soon!
         return [NaN];
+    }
+
+    public train(inputs: number[], targets: number[], learnRate: number): void {
+        // coming soon!
     }
 }
