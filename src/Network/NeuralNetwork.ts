@@ -1,5 +1,6 @@
-import { Functions } from '../Math/Functions';
-import { Neuron } from './Neuron';
+import { Functions } from "../Math/Functions";
+import { Neuron } from "./Neuron";
+import { GradientDescent } from "../Math/Gradients";
 
 export class NeuralNetwork {
 	public Neurons: Neuron[][];
@@ -27,8 +28,10 @@ export class NeuralNetwork {
 			for (let j = 0; j < layerSizes[i]; j++) {
 				this.Neurons[i].push(new Neuron(layerSizes[i - 1], false));
 				console.log(
-					`INIT_ HIDDEN-LAYER (${i}/${layerSizes.length - 2
-					}) new neuron (${j + 1}/${layerSizes[i]}) inputs ${layerSizes[i - 1]
+					`INIT_ HIDDEN-LAYER (${i}/${
+						layerSizes.length - 2
+					}) new neuron (${j + 1}/${layerSizes[i]}) inputs ${
+						layerSizes[i - 1]
 					}`
 				);
 			}
@@ -39,7 +42,8 @@ export class NeuralNetwork {
 				new Neuron(layerSizes[layerSizes.length - 1], false)
 			);
 			console.log(
-				`INIT_ OUTPUT-LAYER new neuron (${i + 1}/${layerSizes[layerSizes.length - 1]
+				`INIT_ OUTPUT-LAYER new neuron (${i + 1}/${
+					layerSizes[layerSizes.length - 1]
 				}) inputs ${layerSizes[layerSizes.length - 2]}`
 			);
 		}
@@ -58,8 +62,10 @@ export class NeuralNetwork {
 			let tmp: number[] = [];
 			for (let j = 0; j < this.Neurons[i].length; j++) {
 				console.log(
-					`FWD-PROP_ layer (${i}/${this.Neurons.length - 1
-					}) neuron (${j + 1}/${this.Neurons[i].length
+					`FWD-PROP_ layer (${i}/${
+						this.Neurons.length - 1
+					}) neuron (${j + 1}/${
+						this.Neurons[i].length
 					}) > prev layerOutput: `,
 					layerOutput
 				);
@@ -69,7 +75,8 @@ export class NeuralNetwork {
 				);
 			}
 			console.log(
-				`FWD-PROP_ layer (${i}/${this.Neurons.length - 1
+				`FWD-PROP_ layer (${i}/${
+					this.Neurons.length - 1
 				}) > curr layerOutput: `,
 				tmp
 			);
@@ -86,8 +93,17 @@ export class NeuralNetwork {
 		const network: Functions = new Functions();
 		const cost: number = network.Cost(networkOutput, targets);
 
+		/*
+		 * PD of C / PD of w[i]
+		 * =
+		 * PD of C / PD of PO
+		 * x
+		 * PD of PO / PD of z
+		 * x
+		 * PD of z / PD of w[i]
+		 */
 		// !! CALCULUS !!
-		/** Chain Rule
+		/* Chain Rule
 		 * !! PD = Partial Derivative !!
 		 * !! PO = Predicted Output !!
 		 * !! NO = Network Output !!
@@ -97,33 +113,83 @@ export class NeuralNetwork {
 		 * !! x = Network Input !!
 		 * !! w = Weight !!
 		 * !! b =  Bias !!
-		 * 
-		 * PD of C / PD of w[i]
-		 * =
-		 * PD of C / PD of PO
-		 * x
-		 * PD of PO / PD of z
-		 * x
-		 * PD of z / PD of w[i]
+		 * !! LR = Learn Rate !!
 		 */
-		/** Gradients
+		/*
 		 * Gradient of the Cost function with respect to the predicted value
 		 * PD of C / PD of PO = 2/n * SUM(NO[i] - PO[i])
-		 * 
+		 *
 		 * Gradient of the predicted value wiith respect to z
 		 * PD of PO / PD of z = S(z) * (1 - S(z))
-		 * 
+		 *
 		 * Gradient of z with respect to w[i]
 		 * x[i]
-		 * 
-		 * Weights
-		 * PD of C / PD of w[i] = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z)) * x[i]
-		 * Biases
-		 * PD of C / PD of b = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z))
 		 */
-		/** Optimization of the network
-		 * Gradient Descent
-		 * 
-		 */
+
+		const gradientDescent: GradientDescent = new GradientDescent();
+
+		for (let layer = 1; layer < this.Neurons.length; layer++) {
+			for (
+				let neuron = 0;
+				neuron < this.Neurons[layer].length;
+				neuron++
+			) {
+				console.log(
+					`TRAINING_ updating weights/biases Layer (${layer}/${
+						this.Neurons.length
+					}) Neuron (${neuron + 1}/${this.Neurons[layer].length})`
+				);
+				console.log("Gradient Descent for Weights");
+				console.log(
+					this.Neurons[layer][neuron],
+					learnRate,
+					networkOutput,
+					network.WeightedSumCalculation(
+						inputs,
+						this.Neurons[layer][neuron].weights
+					),
+					inputs[neuron],
+					targets,
+					inputs.length
+				);
+				gradientDescent.UpdateWeights(
+					this.Neurons[layer][neuron],
+					learnRate,
+					networkOutput,
+					network.WeightedSumCalculation(
+						inputs,
+						this.Neurons[layer][neuron].weights
+					),
+					inputs[neuron],
+					targets,
+					inputs.length
+				);
+				console.log(`TRAINING_ Gradient Descent for Bias`);
+				console.log(
+					this.Neurons[layer][neuron],
+					learnRate,
+					networkOutput,
+					network.WeightedSumCalculation(
+						inputs,
+						this.Neurons[layer][neuron].weights
+					),
+					inputs[neuron],
+					targets,
+					inputs.length
+				);
+				gradientDescent.UpdateBias(
+					this.Neurons[layer][neuron],
+					learnRate,
+					networkOutput,
+					network.WeightedSumCalculation(
+						inputs,
+						this.Neurons[layer][neuron].weights
+					),
+					inputs[neuron],
+					targets,
+					inputs.length
+				);
+			}
+		}
 	}
 }

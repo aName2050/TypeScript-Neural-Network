@@ -9,6 +9,7 @@ export class Functions {
 		let result: number = 0;
 		inputs.forEach((input, i) => {
 			result += input * weights[i];
+			console.log(`z = ${result} + (${input} * ${weights[i]})`);
 		});
 		return result;
 	}
@@ -19,12 +20,12 @@ export class Functions {
 	 * @param dataset The expected output
 	 * @returns The loss of the network
 	 */
-	public MSE(network: number, dataset: number): number {
+	private MSE(network: number, dataset: number): number {
 		return Math.pow(network - dataset, 2);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param networkOutputs The network's outputs
 	 * @param expectedOutputs The expected outputs
 	 * @returns The average cost (loss) of the network
@@ -32,12 +33,16 @@ export class Functions {
 	public Cost(networkOutputs: number[], expectedOutputs: number[]): number {
 		let MSEOutputs: number[] = [];
 		for (let i = 0; i < networkOutputs.length; i++) {
-			const MSEOutput: number = this.MSE(networkOutputs[i], expectedOutputs[i]);
+			const MSEOutput: number = this.MSE(
+				networkOutputs[i],
+				expectedOutputs[i]
+			);
 			MSEOutputs.push(MSEOutput);
 		}
 		const loss: number = MSEOutputs.reduce((prev, curr) => prev + curr);
 		const cost: number = (1 / expectedOutputs.length) * loss;
 
+		console.log(`TRAINING_ network cost: ${cost} loss: ${loss}`);
 		return cost;
 	}
 }

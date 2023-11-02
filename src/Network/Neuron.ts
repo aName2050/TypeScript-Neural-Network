@@ -1,6 +1,6 @@
-import { Functions } from '../Math/Functions';
-import { Random } from '../Math/Math';
-import { Activation } from '../Math/Activation';
+import { Functions } from "../Math/Functions";
+import { Random } from "../Math/Math";
+import { Activation } from "../Math/Activation";
 
 const functions = new Functions();
 const activation = new Activation();
