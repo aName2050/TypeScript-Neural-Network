@@ -28,7 +28,9 @@ export class NeuralNetwork {
                 console.log(
                     `INIT_ HIDDEN-LAYER (${i}/${
                         layerSizes.length - 2
-                    }) new neuron (${j + 1}/${layerSizes[i]})`
+                    }) new neuron (${j + 1}/${layerSizes[i]}) inputs ${
+                        layerSizes[i - 1]
+                    }`
                 );
             }
         }
@@ -40,7 +42,7 @@ export class NeuralNetwork {
             console.log(
                 `INIT_ OUTPUT-LAYER new neuron (${i + 1}/${
                     layerSizes[layerSizes.length - 1]
-                })`
+                }) inputs ${layerSizes[layerSizes.length - 2]}`
             );
         }
     }
