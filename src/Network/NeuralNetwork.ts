@@ -1,3 +1,4 @@
+import { Functions } from '../Math/Functions';
 import { Neuron } from './Neuron';
 
 export class NeuralNetwork {
@@ -80,6 +81,49 @@ export class NeuralNetwork {
 	}
 
 	public train(inputs: number[], targets: number[], learnRate: number): void {
-		// coming soon!
+		const networkOutput: number[] = this.forwardPropagation(inputs);
+
+		const network: Functions = new Functions();
+		const cost: number = network.Cost(networkOutput, targets);
+
+		// !! CALCULUS !!
+		/** Chain Rule
+		 * !! PD = Partial Derivative !!
+		 * !! PO = Predicted Output !!
+		 * !! NO = Network Output !!
+		 * !! C = Cost function !!
+		 * !! z = weightedSum? !!
+		 * !! S = Sigmoid function !!
+		 * !! x = Network Input !!
+		 * !! w = Weight !!
+		 * !! b =  Bias !!
+		 * 
+		 * PD of C / PD of w[i]
+		 * =
+		 * PD of C / PD of PO
+		 * x
+		 * PD of PO / PD of z
+		 * x
+		 * PD of z / PD of w[i]
+		 */
+		/** Gradients
+		 * Gradient of the Cost function with respect to the predicted value
+		 * PD of C / PD of PO = 2/n * SUM(NO[i] - PO[i])
+		 * 
+		 * Gradient of the predicted value wiith respect to z
+		 * PD of PO / PD of z = S(z) * (1 - S(z))
+		 * 
+		 * Gradient of z with respect to w[i]
+		 * x[i]
+		 * 
+		 * Weights
+		 * PD of C / PD of w[i] = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z)) * x[i]
+		 * Biases
+		 * PD of C / PD of b = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z))
+		 */
+		/** Optimization of the network
+		 * Gradient Descent
+		 * 
+		 */
 	}
 }
