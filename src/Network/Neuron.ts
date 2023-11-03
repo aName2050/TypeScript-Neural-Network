@@ -17,11 +17,14 @@ export class Neuron {
 	constructor(inputs: number, inputNode?: boolean) {
 		if (inputNode) {
 			this.bias = 0;
-			this.weights = [0];
+			this.weights = [1];
+			return;
 		}
 
 		this.bias = Random(1, -1);
 		this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
+
+		console.log(`INIT_ neuron bias: ${this.bias} weight: ${this.weights}`);
 	}
 
 	/**
@@ -30,6 +33,10 @@ export class Neuron {
 	 * @returns The output of the neuron
 	 */
 	public CalculateNeuronActivation(neuronInputs: number[]): number {
+		if (neuronInputs.length !== this.weights.length)
+			throw new Error(
+				"CalculateNeuronActivation: Amount of neuron inputs must equal amount of neuron weights"
+			);
 		let z: number = functions.WeightedSumCalculation(
 			neuronInputs,
 			this.weights
