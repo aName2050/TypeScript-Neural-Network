@@ -1,103 +1,71 @@
-import { Activation } from "../Math/Activation";
-import { Neuron } from "../Network/Neuron";
+import { Activation } from '../Math/Activation';
 const sigmoid = new Activation().Sigmoid;
 
-// Single neuron gradient calculation
-class Gradients {
-	// PD of C / PD of w[i] = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z)) * x[i]
-	public Weights(
-		networkOutputs: number[],
-		weightedSum: number,
-		networkInput: number,
-		targetOutputs: number[],
-		networkInputsLength: number
-	): number {
-		const CostFunctionGradient: number =
-			(2 / networkInputsLength) *
-			networkOutputs.reduce(
-				(prev, curr, i) => prev + (curr - targetOutputs[i])
-			) *
-			sigmoid(weightedSum) *
-			(1 - sigmoid(weightedSum)) *
-			networkInput;
-		console.log(
-			`GRADIENTS_ Cost function with respect to weights[i]: ${CostFunctionGradient}`
-		);
-		return CostFunctionGradient;
-	}
-
-	// PD of C / PD of b = 2/n * SUM(NO[i] - PO[i]) * S(z) * (1 - S(z))
-	public Biases(
-		networkOutputs: number[],
-		weightedSum: number,
-		targetOutputs: number[],
-		networkInputsLength: number
-	): number {
-		const CostFunctionGradient: number =
-			(2 / networkInputsLength) *
-			networkOutputs.reduce(
-				(prev, curr, i) => prev + (curr - targetOutputs[i])
-			) *
-			sigmoid(weightedSum) *
-			(1 - sigmoid(weightedSum));
-		console.log(
-			`GRADIENTS_ Cost function with respect to bias: ${CostFunctionGradient}`
-		);
-		return CostFunctionGradient;
-	}
-}
-
 export class GradientDescent {
-	// w[i] = w[i] - (LR * GW)
-	public UpdateWeights(
-		neuron: Neuron,
-		learnRate: number,
-		networkOutputs: number[],
-		weightedSum: number,
-		networkInput: number,
-		targetOutputs: number[],
-		networkInputsLength: number
-	): void {
-		for (let i = 0; i < neuron.weights.length; i++) {
-			const oldWeight: number = neuron.weights[i];
-			neuron.weights[i] =
-				neuron.weights[i] -
-				learnRate *
-					new Gradients().Weights(
-						networkOutputs,
-						weightedSum,
-						networkInput,
-						targetOutputs,
-						networkInputsLength
-					);
-			console.log(
-				`OPTIMIZATION_ weight changed (${i + 1}/${
-					neuron.weights.length
-				}): ${oldWeight} => ${neuron.weights[i]}`
-			);
-		}
-	}
+    // Partial derivative of cost with respect to predicted output (PO)
+    private partialCostPartialPO(
+        networkOutput: number,
+        targetOutput: number
+    ): number {
+        return 2 * (networkOutput - targetOutput);
+    }
 
-	// b = b - (LR * GB)
-	public UpdateBias(
-		neuron: Neuron,
-		learnRate: number,
-		networkOutputs: number[],
-		weightedSum: number,
-		networkInput: number,
-		targetOutputs: number[],
-		networkInputsLength: number
-	): void {
-		const oldBias: number = neuron.bias;
-		neuron.bias =
-			neuron.bias -
-			learnRate *
-				new Gradients().Biases(
-					networkOutputs,
-					weightedSum,
-					targetOutputs,
-					networkInputsLength
-				);
-		console.log(`OPTIMIZATION_ bias changed: ${oldBias} => ${neuron.bias}`);
-	}
+    // Partial derivative of predicted output (PO) with respect to weighted sum (z)
+    private partialPOPartialZ(z: number): number {
+        const sigmoidZ: number = sigmoid(z);
+        return sigmoidZ * (1 - sigmoidZ);
+    }
+
+    // Partial derivative of weighted sum (z) with respect to weight (w[i])
+    private partialZPartialWi(networkInput: number): number {
+        return networkInput;
+    }
+
+    // Partial derivative of cost with respect to weight (w[i])
+    public partialCostPartialWi(
+        networkOutput: number,
+        targetOutput: number,
+        z: number,
+        input: number
+    ): number {
+        const dC_dPO: number = this.partialCostPartialPO(
+            networkOutput,
+            targetOutput
+        );
+        const dPO_dZ: number = this.partialPOPartialZ(z);
+        const dZ_dWi: number = this.partialZPartialWi(input);
+        return dC_dPO * dPO_dZ * dZ_dWi;
+    }
+
+    // Partial derivative of cost with respect to bias (b)
+    public partialCostPartialB(
+        networkOutput: number,
+        targetOutput: number,
+        z: number
+    ): number {
+        const dC_dPO: number = this.partialCostPartialPO(
+            networkOutput,
+            targetOutput
+        );
+        const dPO_dZ: number = this.partialPOPartialZ(z);
+        return dC_dPO * dPO_dZ;
+    }
+
+    // Update weight
+    public UpdateWeight(
+        weight: number,
+        learnRate: number,
+        gradient: number
+    ): number {
+        return weight - learnRate * gradient;
+    }
+
+    // Update bias
+    public UpdateBias(
+        bias: number,
+        learnRate: number,
+        gradient: number
+    ): number {
+        return bias - learnRate * gradient;
+    }
 }
