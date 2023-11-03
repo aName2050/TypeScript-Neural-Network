@@ -2,6 +2,8 @@ import { Functions } from "../Math/Functions";
 import { Neuron } from "./Neuron";
 import { GradientDescent } from "../Math/Gradients";
 
+import chalk from "chalk";
+
 export class NeuralNetwork {
 	public Neurons: Neuron[][];
 
@@ -20,7 +22,9 @@ export class NeuralNetwork {
 		for (let i = 0; i < layerSizes[0]; i++) {
 			this.Neurons[0].push(new Neuron(0, true));
 			console.log(
-				`INIT_ INPUT-LAYER new neuron (${i + 1}/${layerSizes[0]})`
+				`${chalk.white.bgGreen.bold("INIT_")} INPUT-LAYER new neuron (${
+					i + 1
+				}/${layerSizes[0]})`
 			);
 		}
 		// Initialize hidden layer(s)
@@ -28,7 +32,7 @@ export class NeuralNetwork {
 			for (let j = 0; j < layerSizes[i]; j++) {
 				this.Neurons[i].push(new Neuron(layerSizes[i - 1], false));
 				console.log(
-					`INIT_ HIDDEN-LAYER (${i}/${
+					`${chalk.white.bgGreen.bold("INIT_")} HIDDEN-LAYER (${i}/${
 						layerSizes.length - 2
 					}) new neuron (${j + 1}/${layerSizes[i]}) inputs ${
 						layerSizes[i - 1]
@@ -42,7 +46,9 @@ export class NeuralNetwork {
 				new Neuron(layerSizes[layerSizes.length - 1], false)
 			);
 			console.log(
-				`INIT_ OUTPUT-LAYER new neuron (${i + 1}/${
+				`${chalk.white.bgGreen.bold(
+					"INIT_"
+				)} OUTPUT-LAYER new neuron (${i + 1}/${
 					layerSizes[layerSizes.length - 1]
 				}) inputs ${layerSizes[layerSizes.length - 2]}`
 			);
@@ -62,7 +68,7 @@ export class NeuralNetwork {
 			let tmp: number[] = [];
 			for (let j = 0; j < this.Neurons[i].length; j++) {
 				console.log(
-					`FWD-PROP_ layer (${i}/${
+					`${chalk.white.bgMagenta.bold("FWD-PROP_")} layer (${i}/${
 						this.Neurons.length - 1
 					}) neuron (${j + 1}/${
 						this.Neurons[i].length
@@ -75,7 +81,7 @@ export class NeuralNetwork {
 				);
 			}
 			console.log(
-				`FWD-PROP_ layer (${i}/${
+				`${chalk.white.bgMagenta.bold("FWD-PROP_")} layer (${i}/${
 					this.Neurons.length - 1
 				}) > curr layerOutput: `,
 				tmp
@@ -83,7 +89,10 @@ export class NeuralNetwork {
 			layerOutput = tmp;
 			outputs = layerOutput;
 		}
-		console.log(`FWD-PROP_ networkOutput: `, outputs);
+		console.log(
+			`${chalk.white.bgMagenta.bold("FWD-PROP_")} networkOutput: `,
+			outputs
+		);
 		return outputs;
 	}
 
@@ -136,32 +145,44 @@ export class NeuralNetwork {
 		// Backpropagation & Gradient Descent algorithms
 		const gradientDescent: GradientDescent = new GradientDescent();
 		// Backpropagation: going through the network backwards to train it
-		for (let layer = this.Neurons.length - 1; layer >= 1; layer--) {
+		let layerOutput: number[] = inputs;
+		for (let layer = 1; layer < this.Neurons.length; layer++) {
 			// Iterate over each neuron in the current layer
+			let activeLayerOutputTemp: number[] = [];
 			for (
 				let neuron = 0;
 				neuron < this.Neurons[layer].length;
 				neuron++
 			) {
-				// TODO: finish and debug
 				console.log(
-					`TRAINING_ backProp layer (${layer}/${
-						this.Neurons.length - 1
+					`${chalk.black.bgWhite.bold(
+						"TRAINING_"
+					)} backProp layer (${layer}/${
+						this.Neurons.length
 					}) neuron (${neuron + 1}/${this.Neurons[layer].length})`
 				);
 				console.log(
-					`TRAINING_ backProp neuron data:`,
+					`${chalk.white.bgYellowBright.bold(
+						"TRAINING_"
+					)} backProp neuron data:`,
 					this.Neurons[layer][neuron]
 				);
 				// Calculate weightedSum for gradient calculations
+				console.log(
+					`${chalk.white.bgBlue.bold(
+						"TRAINING_"
+					)} z > inputs:${inputs} weights:${
+						this.Neurons[layer][neuron].weights
+					}`
+				);
 				const z: number =
 					this.Neurons[layer][neuron].CalculateNeuronActivation(
-						inputs
+						layerOutput
 					);
-				console.log(
-					`TRAINING_ z = ${z}: inputs:${inputs} weights:${this.Neurons[layer][neuron].weights}`
-				);
-				// Calculate gradients for gradient descent algorithm
+				activeLayerOutputTemp.push(z);
+				layerOutput = activeLayerOutputTemp;
+				console.log(`${chalk.white.bgBlue.bold("TRAINING_")} z = ${z}`);
+				// // Calculate gradients for gradient descent algorithm
 				const dC_dWi: number = gradientDescent.partialCostPartialWi(
 					networkOutput[neuron],
 					targets[neuron],
@@ -173,8 +194,12 @@ export class NeuralNetwork {
 					targets[neuron],
 					z
 				);
-				console.log(`TRAINING_ dC_dWi: ${dC_dWi} dC_dB: ${dC_dB}`);
-				// Update weights
+				console.log(
+					`${chalk.white.bgBlue.bold(
+						"TRAINING_"
+					)} dC_dWi: ${dC_dWi} dC_dB: ${dC_dB}`
+				);
+				// // Update weights
 				for (
 					let i = 0;
 					i < this.Neurons[layer][neuron].weights.length;
@@ -182,22 +207,33 @@ export class NeuralNetwork {
 				) {
 					const oldWeight: number =
 						this.Neurons[layer][neuron].weights[i];
-					console.log(
-						`TRAINING_ updated weight: ${oldWeight} => ${gradientDescent.UpdateWeight(
+					this.Neurons[layer][neuron].weights[i] =
+						gradientDescent.UpdateWeight(
 							this.Neurons[layer][neuron].weights[i],
 							learnRate,
 							dC_dWi
-						)}`
+						);
+					console.log(
+						`${chalk.white.bgGreenBright.bold(
+							"TRAINING_"
+						)} updated weight: ${oldWeight} => ${
+							this.Neurons[layer][neuron].weights[i]
+						}`
 					);
 				}
 				// Update bias
 				const oldBias: number = this.Neurons[layer][neuron].bias;
+				this.Neurons[layer][neuron].bias = gradientDescent.UpdateBias(
+					this.Neurons[layer][neuron].bias,
+					learnRate,
+					dC_dB
+				);
 				console.log(
-					`TRAINING_ updated bias: ${oldBias} => ${gradientDescent.UpdateBias(
-						this.Neurons[layer][neuron].bias,
-						learnRate,
-						dC_dB
-					)}`
+					`${chalk.white.bgGreenBright.bold(
+						"TRAINING_"
+					)} updated bias: ${oldBias} => ${
+						this.Neurons[layer][neuron].bias
+					}`
 				);
 			}
 		}

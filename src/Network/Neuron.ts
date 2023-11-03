@@ -2,6 +2,8 @@ import { Functions } from "../Math/Functions";
 import { Random } from "../Math/Math";
 import { Activation } from "../Math/Activation";
 
+import chalk from "chalk";
+
 const functions = new Functions();
 const activation = new Activation();
 
@@ -24,7 +26,11 @@ export class Neuron {
 		this.bias = Random(1, -1);
 		this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
 
-		console.log(`INIT_ neuron bias: ${this.bias} weight: ${this.weights}`);
+		console.log(
+			`${chalk.white.bgGreen.bold("INIT_")} neuron bias: ${
+				this.bias
+			} weight: ${this.weights}`
+		);
 	}
 
 	/**
