@@ -23,7 +23,7 @@ export class Neuron {
 			return;
 		}
 
-		this.bias = Random(1, -1);
+		this.bias = Random(-1, 1);
 		this.weights = Array.from({ length: inputs }, () => Random(-1, 1));
 
 		console.log(
