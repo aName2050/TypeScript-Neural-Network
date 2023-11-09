@@ -39,10 +39,10 @@ export class Neuron {
 	 * @returns The output of the neuron
 	 */
 	public CalculateNeuronActivation(neuronInputs: number[]): number {
-		if (neuronInputs.length !== this.weights.length)
-			throw new Error(
-				"CalculateNeuronActivation: Amount of neuron inputs must equal amount of neuron weights"
-			);
+		// if (neuronInputs.length !== this.weights.length)
+		// 	throw new Error(
+		// 		"CalculateNeuronActivation: Amount of neuron inputs must equal amount of neuron weights"
+		// 	);
 		let z: number = functions.WeightedSumCalculation(
 			neuronInputs,
 			this.weights
