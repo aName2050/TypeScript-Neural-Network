@@ -199,7 +199,7 @@ export class NeuralNetwork {
                         'TRAINING_'
                     )} dC_dWi: ${dC_dWi} dC_dB: ${dC_dB}`
                 );
-                // // Update weights
+                // Update weights
                 for (
                     let i = 0;
                     i < this.Neurons[layer][neuron].weights.length;
